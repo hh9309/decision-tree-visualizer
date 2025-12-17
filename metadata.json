@@ -1,0 +1,5 @@
+{
+  "name": "智策 - 交互式决策树分析",
+  "description": "一个优雅的交互式决策树构建与分析工具。支持可视化建模、自动期望值(EMV)计算、逐步推演以及基于Gemini AI的智能决策洞察。",
+  "requestFramePermissions": []
+}
