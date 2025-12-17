@@ -255,9 +255,10 @@ const App: React.FC = () => {
   const activeLog = activeLogId ? logs.find(l => l.id === activeLogId) : null;
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 text-gray-900 font-sans">
+    // 使用 100dvh 确保在移动端浏览器中高度正确，避免地址栏遮挡
+    <div className="flex flex-col h-[100dvh] bg-gray-50 text-gray-900 font-sans overflow-hidden">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between shadow-sm z-10 shrink-0">
+      <header className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shadow-sm z-10 shrink-0">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-700 rounded flex items-center justify-center text-white font-bold text-xl shadow-md">
              Z
@@ -275,11 +276,13 @@ const App: React.FC = () => {
         </div>
       </header>
 
-      {/* Main Content Area */}
-      <div className="flex flex-1 overflow-hidden">
+      {/* Main Content Area - Responsive Flex Layout */}
+      {/* Mobile: Column layout (stack). Desktop: Row layout. */}
+      <div className="flex flex-1 overflow-hidden flex-col lg:flex-row">
         
         {/* Left Column: Visualization + Calculation Console */}
-        <div className="flex-1 flex flex-col min-w-0 border-r border-gray-200">
+        {/* Mobile: Takes ~60% height. Desktop: Takes remaining width. */}
+        <div className="flex flex-col min-w-0 lg:flex-1 lg:border-r border-gray-200 h-[60%] lg:h-auto">
            
            {/* Top: Canvas */}
            <div className="flex-1 relative bg-slate-50/50 overflow-hidden">
@@ -309,42 +312,47 @@ const App: React.FC = () => {
            </div>
 
            {/* Bottom: Enhanced Calculation Console */}
-           <div className="h-72 bg-white border-t border-gray-200 flex flex-col shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-20">
+           {/* Fixed height on desktop, flexible on mobile but smaller */}
+           <div className="h-40 lg:h-72 bg-white border-t border-gray-200 flex flex-col shadow-[0_-4px_20px_-5px_rgba(0,0,0,0.1)] z-20 shrink-0">
               {/* Console Toolbar */}
               <div className="px-4 py-2 bg-gray-50 border-b border-gray-200 flex justify-between items-center shrink-0">
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2 lg:gap-4">
                     <h3 className="font-bold text-gray-700 text-sm flex items-center gap-2">
                       <svg className="w-4 h-4 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                       </svg>
-                      计算控制台
+                      <span className="hidden sm:inline">计算控制台</span>
+                      <span className="sm:hidden">控制台</span>
                     </h3>
                     
                     {/* Control Buttons Group */}
-                    <div className="flex bg-white rounded-md shadow-sm border border-gray-300 divide-x divide-gray-300 ml-4">
+                    <div className="flex bg-white rounded-md shadow-sm border border-gray-300 divide-x divide-gray-300 ml-2 lg:ml-4">
                       <button 
                         onClick={() => handleSolve(true)}
-                        className="px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition flex items-center gap-1"
+                        className="px-2 lg:px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition flex items-center gap-1"
                         title="逐步执行计算"
                       >
                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                         逐步求解
+                         <span className="hidden sm:inline">逐步求解</span>
+                         <span className="sm:hidden">逐步</span>
                       </button>
                       <button 
                          onClick={() => handleSolve(false)}
-                         className="px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-green-50 hover:text-green-700 transition flex items-center gap-1"
+                         className="px-2 lg:px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-green-50 hover:text-green-700 transition flex items-center gap-1"
                          title="演示自动求解过程"
                       >
                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                         自动求解
+                         <span className="hidden sm:inline">自动求解</span>
+                         <span className="sm:hidden">自动</span>
                       </button>
                       <button 
                          onClick={resetCalculation}
-                         className="px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-red-700 transition flex items-center gap-1"
+                         className="px-2 lg:px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-red-50 hover:text-red-700 transition flex items-center gap-1"
                          title="清除所有计算结果"
                       >
                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                         重置
+                         <span className="hidden sm:inline">重置</span>
+                         <span className="sm:hidden">重置</span>
                       </button>
                     </div>
                   </div>
@@ -355,14 +363,13 @@ const App: React.FC = () => {
               {/* Console Body: Split View */}
               <div className="flex-1 flex overflow-hidden">
                  {/* Left: Step List */}
-                 <div className="w-2/5 border-r border-gray-200 overflow-y-auto bg-white flex flex-col">
+                 <div className="w-1/3 lg:w-2/5 border-r border-gray-200 overflow-y-auto bg-white flex flex-col">
                     <div className="px-3 py-2 bg-gray-50 border-b border-gray-100 text-[10px] font-bold text-gray-400 uppercase tracking-wider sticky top-0 z-10">
-                       计算步骤记录
+                       步骤
                     </div>
                     {logs.length === 0 ? (
                         <div className="flex-1 flex flex-col items-center justify-center text-gray-400 p-4">
-                           <span className="text-sm italic">等待计算...</span>
-                           <span className="text-xs mt-1">请点击上方工具栏按钮开始</span>
+                           <span className="text-sm italic">等待计算</span>
                         </div>
                     ) : (
                         <div className="divide-y divide-gray-100">
@@ -370,28 +377,20 @@ const App: React.FC = () => {
                              <div 
                                key={log.id} 
                                onClick={() => setActiveLogId(log.id)}
-                               className={`px-4 py-3 cursor-pointer transition-colors flex items-center justify-between group ${activeLogId === log.id ? 'bg-blue-50' : 'hover:bg-gray-50'}`}
+                               className={`px-3 py-2 cursor-pointer transition-colors flex items-center justify-between group ${activeLogId === log.id ? 'bg-blue-50' : 'hover:bg-gray-50'}`}
                              >
-                                <div className="flex items-center gap-3 overflow-hidden">
-                                   <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 ${activeLogId === log.id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}`}>
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                   <div className={`w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold shrink-0 ${activeLogId === log.id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}`}>
                                       {index + 1}
                                    </div>
                                    <div className="flex flex-col min-w-0">
-                                      <span className={`text-sm font-medium truncate ${activeLogId === log.id ? 'text-blue-800' : 'text-gray-700'}`}>
+                                      <span className={`text-xs font-medium truncate ${activeLogId === log.id ? 'text-blue-800' : 'text-gray-700'}`}>
                                         {log.nodeLabel}
-                                      </span>
-                                      <span className="text-[10px] text-gray-400 flex items-center gap-1">
-                                        {log.nodeType === NodeType.DECISION ? '决策节点' : '机会节点'}
-                                        <span>•</span>
-                                        {new Date(log.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}
                                       </span>
                                    </div>
                                 </div>
                                 <div className="text-right">
-                                   <span className="text-sm font-bold text-gray-900">¥{log.result.toFixed(0)}</span>
-                                   <svg className={`w-4 h-4 text-gray-300 ml-auto mt-1 ${activeLogId === log.id ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                   </svg>
+                                   <span className="text-xs font-bold text-gray-900">¥{log.result.toFixed(0)}</span>
                                 </div>
                              </div>
                            ))}
@@ -401,45 +400,32 @@ const App: React.FC = () => {
                  </div>
 
                  {/* Right: Formula Detail */}
-                 <div className="flex-1 bg-slate-50 overflow-y-auto p-6 flex flex-col">
-                    <div className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4">
-                       公式详情
-                    </div>
+                 <div className="flex-1 bg-slate-50 overflow-y-auto p-4 flex flex-col">
                     {activeLog ? (
                        <div className="animate-in fade-in slide-in-from-right-2 duration-300">
-                          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                             <div className="flex items-center gap-2 mb-6">
-                                <span className={`px-2 py-0.5 rounded text-xs font-bold border ${
+                          <div className="bg-white p-3 lg:p-6 rounded-xl shadow-sm border border-gray-200">
+                             <div className="flex flex-col lg:flex-row lg:items-center gap-2 mb-3 lg:mb-6">
+                                <span className={`self-start px-2 py-0.5 rounded text-xs font-bold border ${
                                    activeLog.nodeType === NodeType.DECISION ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-orange-50 text-orange-700 border-orange-200'
                                 }`}>
-                                   {activeLog.nodeType === NodeType.DECISION ? '决策计算 (MAX)' : '期望值计算 (EMV)'}
+                                   {activeLog.nodeType === NodeType.DECISION ? '决策 (MAX)' : '期望值 (EMV)'}
                                 </span>
-                                <h4 className="text-lg font-bold text-gray-800">{activeLog.nodeLabel}</h4>
+                                <h4 className="text-sm lg:text-lg font-bold text-gray-800 truncate">{activeLog.nodeLabel}</h4>
                              </div>
                              
-                             <div className="mb-2 text-sm text-gray-500 font-medium">计算公式:</div>
-                             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 font-mono text-base text-gray-700 break-all leading-relaxed shadow-inner">
+                             <div className="bg-gray-50 p-2 lg:p-4 rounded-lg border border-gray-200 font-mono text-xs lg:text-base text-gray-700 break-all leading-relaxed shadow-inner">
                                 {activeLog.formula}
                              </div>
                              
-                             <div className="mt-6 flex justify-end items-end gap-3">
-                                <span className="text-gray-500 text-sm pb-1">结果 =</span>
-                                <span className="text-3xl font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded">¥{activeLog.result.toFixed(2)}</span>
+                             <div className="mt-3 lg:mt-6 flex justify-end items-end gap-2 lg:gap-3">
+                                <span className="text-gray-500 text-xs lg:text-sm pb-1">结果 =</span>
+                                <span className="text-lg lg:text-3xl font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">¥{activeLog.result.toFixed(2)}</span>
                              </div>
-                          </div>
-                          
-                          <div className="mt-4 text-xs text-gray-400 px-2">
-                             提示: {activeLog.nodeType === NodeType.DECISION ? 
-                               '决策节点选择所有子分支中期望值(EMV)最大的路径。' : 
-                               '机会节点的期望值等于各分支结果与对应概率乘积之和。'}
                           </div>
                        </div>
                     ) : (
                        <div className="h-full flex flex-col items-center justify-center text-gray-300">
-                          <svg className="w-16 h-16 mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                          </svg>
-                          <p>选择左侧步骤查看详细公式</p>
+                          <p className="text-xs">选择左侧步骤查看详情</p>
                        </div>
                     )}
                  </div>
@@ -449,7 +435,8 @@ const App: React.FC = () => {
         </div>
 
         {/* Right Column: Sidebar */}
-        <div className="w-80 bg-white border-l border-gray-200 flex flex-col shadow-xl z-30 shrink-0">
+        {/* Mobile: Takes ~40% height, stacked below. Desktop: Fixed width sidebar. */}
+        <div className="w-full lg:w-80 bg-white border-t lg:border-t-0 lg:border-l border-gray-200 flex flex-col shadow-xl z-30 shrink-0 h-[40%] lg:h-auto">
           {/* Controls */}
           <div className="flex-1 overflow-y-auto no-scrollbar">
              <Controls 
