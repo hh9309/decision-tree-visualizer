@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { TreeNode, NodeType, CalculationLog } from './types';
 import { 
   createInitialTree, 
@@ -559,6 +560,7 @@ const App: React.FC = () => {
           </div>
         </div>
       </div>
+      <SpeedInsights />
     </div>
   );
 };
